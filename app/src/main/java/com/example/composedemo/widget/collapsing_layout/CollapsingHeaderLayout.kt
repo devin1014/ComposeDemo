@@ -1,7 +1,8 @@
 package com.example.composedemo.widget.collapsing_layout
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -11,51 +12,88 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 
 @Composable
 fun CollapsingHeaderLayout(
-    toolbarHeight: Dp = 56.dp,
-    collapsingToolbarLayoutHeight: Dp,
     title: (@Composable () -> Unit)? = null,
     navigationIcon: (@Composable () -> Unit)? = null,
-    background: (@Composable () -> Unit)? = null,
-    content: @Composable (scrollOffset: Int, maxScrollRange: Int) -> Unit
+    header: (@Composable () -> Unit)? = null,
+    contentSticker: (@Composable () -> Unit)? = null,
+    lazyColumnContent: (LazyListScope.() -> Unit)? = null,
+    scrollableContent: (@Composable () -> Unit)? = null,
+    toolbarHeight: Dp = 56.dp,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
-        val maxUpPx = with(LocalDensity.current) { collapsingToolbarLayoutHeight.roundToPx().toFloat() - toolbarHeight.roundToPx().toFloat() }
-        val minUpPx = 0f
-        val toolbarOffsetHeightPx = remember { mutableStateOf(0f) }
-        val nestedScrollConnection = remember {
-            object : NestedScrollConnection {
-                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                    val delta = available.y
-                    val newOffset = toolbarOffsetHeightPx.value + delta
-                    toolbarOffsetHeightPx.value = newOffset.coerceIn(-maxUpPx, minUpPx)
-                    return Offset.Zero
-                }
-            }
-        }
+        val collapsingToolBarHeight = remember { mutableStateOf(0) }
+        val maxUpPx = remember { mutableStateOf(0f) }
+        val collapsingToolBarScrollState = remember { mutableStateOf(0f) }
         Box(
             Modifier
                 .fillMaxSize()
-                .nestedScroll(nestedScrollConnection)
+                .nestedScroll(remember {
+                    object : NestedScrollConnection {
+                        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                            val delta = available.y
+                            val newOffset = collapsingToolBarScrollState.value + delta
+                            collapsingToolBarScrollState.value = newOffset.coerceIn(-maxUpPx.value, 0f)
+                            return Offset.Zero
+                        }
+                    }
+                })
         ) {
-            content(toolbarOffsetHeightPx.value.roundToInt(), maxUpPx.roundToInt())
+            if (contentSticker != null) {
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    val contentStickerHeight = remember { mutableStateOf(0) }
+                    val contentStickerHeightDp = with(LocalDensity) { Dp(contentStickerHeight.value / this.current.density) }
+                    val collapsingToolBarHeightDp = with(LocalDensity) { Dp(collapsingToolBarHeight.value / this.current.density) }
+                    if (lazyColumnContent != null) {
+                        LazyColumn(
+                            contentPadding = PaddingValues(top = collapsingToolBarHeightDp + contentStickerHeightDp)
+                        ) {
+                            lazyColumnContent(this)
+                        }
+                    }
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .offset { IntOffset(x = 0, y = collapsingToolBarScrollState.value.roundToInt()) }) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(collapsingToolBarHeightDp)
+                        )
+                        Box(
+                            modifier = Modifier.onSizeChanged { contentStickerHeight.value = it.height }
+                        ) {
+                            contentSticker()
+                        }
+                        if (lazyColumnContent == null && scrollableContent != null) {
+                            scrollableContent.invoke()
+                        }
+                    }
+                }
+            }
+            // collapsing tool bar
             CollapsingToolbar(
                 toolbarHeight = toolbarHeight,
-                collapsingToolbarHeight = collapsingToolbarLayoutHeight,
-                offset = toolbarOffsetHeightPx.value,
+                offset = collapsingToolBarScrollState.value,
                 navigationIcon = navigationIcon,
                 title = title,
-                background = background
-            )
+                background = header
+            ) { collapsingToolbarHeight, maxScrollableHeight ->
+                collapsingToolBarHeight.value = collapsingToolbarHeight
+                maxUpPx.value = maxScrollableHeight.toFloat()
+            }
         }
     }
 }

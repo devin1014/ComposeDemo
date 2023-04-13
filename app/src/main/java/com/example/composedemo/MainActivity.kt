@@ -36,7 +36,7 @@ import com.example.composedemo.nav.NavViewModel
 import com.example.composedemo.widget.HorizontalPagerDemo
 import com.example.composedemo.widget.RowCombinePagerAdapter
 import com.example.composedemo.widget.RowCombineViewModel
-import com.example.composedemo.widget.collapsing_layout.ScrollableAppBarDemo
+import com.example.composedemo.widget.collapsing_layout.CollapsingHeaderDemo
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             }
             rowCombinePager()
             composable(ScrollableAppBar.router) {
-                ScrollableAppBarDemo()
+                CollapsingHeaderDemo()
             }
         }
     }

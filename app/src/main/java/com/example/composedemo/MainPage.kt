@@ -25,7 +25,7 @@ sealed class Menu(val name: String, val router: String) {
     object Nav2 : Menu("Nav2", "navPage2")
     object Pager : Menu("Pager", "horizontalPager")
     object RowPager : Menu("RowPager", "rowPager")
-    object ScrollableAppBar : Menu("ScrollableAppBar", "scrollableAppBar")
+    object ScrollableAppBar : Menu("CollapsingHeader", "collapsingHeader")
 }
 
 private val bgColors = listOf(Color.Cyan, Color.Magenta, Color.LightGray, Color.Yellow, Color.Blue, Color.Green)

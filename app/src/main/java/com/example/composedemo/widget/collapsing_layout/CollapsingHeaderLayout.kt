@@ -55,8 +55,8 @@ fun CollapsingHeaderLayout(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     val contentStickerHeight = remember { mutableStateOf(0) }
-                    val contentStickerHeightDp = with(LocalDensity) { Dp(contentStickerHeight.value / this.current.density) }
-                    val collapsingToolBarHeightDp = with(LocalDensity) { Dp(collapsingToolBarHeight.value / this.current.density) }
+                    val contentStickerHeightDp = contentStickerHeight.value.toDp()
+                    val collapsingToolBarHeightDp = collapsingToolBarHeight.value.toDp()
                     if (lazyColumnContent != null) {
                         LazyColumn(
                             contentPadding = PaddingValues(top = collapsingToolBarHeightDp + contentStickerHeightDp)
@@ -77,7 +77,23 @@ fun CollapsingHeaderLayout(
                         ) {
                             contentSticker()
                         }
-                        if (lazyColumnContent == null && scrollableContent != null) {
+                    }
+                    if (lazyColumnContent == null && scrollableContent != null) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(PaddingValues(top = collapsingToolBarHeightDp + contentStickerHeightDp + collapsingToolBarScrollState.value.toDp()))
+                                .nestedScroll(remember {
+                                    object : NestedScrollConnection {
+                                        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                                            if (collapsingToolBarScrollState.value > -maxUpPx.value && collapsingToolBarScrollState.value < 0) {
+                                                return available
+                                            }
+                                            return Offset.Zero
+                                        }
+                                    }
+                                })
+                        ) {
                             scrollableContent.invoke()
                         }
                     }
@@ -90,10 +106,16 @@ fun CollapsingHeaderLayout(
                 navigationIcon = navigationIcon,
                 title = title,
                 background = header
-            ) { collapsingToolbarHeight, maxScrollableHeight ->
+            ) { collapsingToolbarHeight, maxScrollDistance ->
                 collapsingToolBarHeight.value = collapsingToolbarHeight
-                maxUpPx.value = maxScrollableHeight.toFloat()
+                maxUpPx.value = maxScrollDistance.toFloat()
             }
         }
     }
 }
+
+@Composable
+private fun Float.toDp() = with(LocalDensity) { Dp(this@toDp / this.current.density) }
+
+@Composable
+private fun Int.toDp() = with(LocalDensity) { Dp(this@toDp / this.current.density) }

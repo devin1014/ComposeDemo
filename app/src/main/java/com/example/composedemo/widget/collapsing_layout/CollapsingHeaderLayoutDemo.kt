@@ -90,6 +90,11 @@ fun CollapsingHeaderDemo() {
                         .background(Color.Blue)
                         .border(width = 1.dp, color = Color.White, shape = RectangleShape)
                 )
+                Box(
+                    modifier = modifier
+                        .background(Color.Magenta)
+                        .border(width = 1.dp, color = Color.White, shape = RectangleShape)
+                )
             }
         }
     )

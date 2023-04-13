@@ -20,7 +20,7 @@ fun CollapsingToolbar(
     title: (@Composable () -> Unit)? = null,
     navigationIcon: (@Composable () -> Unit)? = null,
     background: (@Composable () -> Unit)? = null,
-    onSizeChanged: (collapsingTooBarHeight: Int, maxScrollableHeight: Int) -> Unit
+    onSizeChanged: (collapsingTooBarHeight: Int, maxScrollDistance: Int) -> Unit
 ) {
     val collapsingToolbarHeight = remember { mutableStateOf(0) }
     val maxScrollableHeight = with(LocalDensity.current) { collapsingToolbarHeight.value - toolbarHeight.roundToPx() }

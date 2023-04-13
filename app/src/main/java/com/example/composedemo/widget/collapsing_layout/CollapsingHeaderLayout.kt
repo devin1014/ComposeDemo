@@ -56,20 +56,21 @@ fun CollapsingHeaderLayout(
                     }
                 })
         ) {
-            if (contentSticker != null) {
-                Box(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    val contentStickerHeight = remember { mutableStateOf(0) }
-                    val contentStickerHeightDp = contentStickerHeight.value.toDp()
-                    val collapsingToolBarHeightDp = collapsingToolBarHeight.value.toDp()
-                    if (lazyColumnContent != null) {
-                        LazyColumn(
-                            contentPadding = PaddingValues(top = collapsingToolBarHeightDp + contentStickerHeightDp)
-                        ) {
-                            lazyColumnContent(this)
-                        }
+
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                val contentStickerHeight = remember { mutableStateOf(0) }
+                val contentStickerHeightDp = contentStickerHeight.value.toDp()
+                val collapsingToolBarHeightDp = collapsingToolBarHeight.value.toDp()
+                if (lazyColumnContent != null) {
+                    LazyColumn(
+                        contentPadding = PaddingValues(top = collapsingToolBarHeightDp + contentStickerHeightDp)
+                    ) {
+                        lazyColumnContent(this)
                     }
+                }
+                if (contentSticker != null) {
                     Column(modifier = Modifier
                         .fillMaxWidth()
                         .offset { IntOffset(x = 0, y = collapsingToolBarScrollState.value.roundToInt()) }) {
@@ -84,24 +85,24 @@ fun CollapsingHeaderLayout(
                             contentSticker()
                         }
                     }
-                    if (lazyColumnContent == null && scrollableContent != null) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(PaddingValues(top = collapsingToolBarHeightDp + contentStickerHeightDp + collapsingToolBarScrollState.value.toDp()))
-                                .nestedScroll(remember {
-                                    object : NestedScrollConnection {
-                                        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                                            if (collapsingToolBarScrollState.value > -maxUpPx.value && collapsingToolBarScrollState.value < 0) {
-                                                return available
-                                            }
-                                            return Offset.Zero
+                }
+                if (lazyColumnContent == null && scrollableContent != null) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(PaddingValues(top = collapsingToolBarHeightDp + contentStickerHeightDp + collapsingToolBarScrollState.value.toDp()))
+                            .nestedScroll(remember {
+                                object : NestedScrollConnection {
+                                    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                                        if (collapsingToolBarScrollState.value > -maxUpPx.value && collapsingToolBarScrollState.value < 0) {
+                                            return available
                                         }
+                                        return Offset.Zero
                                     }
-                                })
-                        ) {
-                            scrollableContent.invoke()
-                        }
+                                }
+                            })
+                    ) {
+                        scrollableContent.invoke()
                     }
                 }
             }

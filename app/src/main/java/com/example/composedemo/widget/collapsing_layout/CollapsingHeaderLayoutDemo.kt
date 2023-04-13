@@ -43,16 +43,16 @@ fun CollapsingHeaderDemo() {
             contentSticker = {
                 Sticker()
             },
-            lazyColumnContent = {
-                items(100) { index ->
-                    Text(
-                        "I'm item $index",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    )
-                }
-            },
+//            lazyColumnContent = {
+//                items(100) { index ->
+//                    Text(
+//                        "I'm item $index",
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(16.dp)
+//                    )
+//                }
+//            },
             scrollableContent = {
                 ScrollableContent()
             },
@@ -118,29 +118,31 @@ fun Sticker() {
 
 @Composable
 fun ScrollableContent() {
-    Column(
-        Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
-        val modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-        Box(
-            modifier = modifier
-                .background(Color.Red)
-                .border(width = 1.dp, color = Color.White, shape = RectangleShape)
-        )
-        Box(
-            modifier = modifier
-                .background(Color.Green)
-                .border(width = 1.dp, color = Color.White, shape = RectangleShape)
-        )
-        Box(
-            modifier = modifier
-                .background(Color.Blue)
-                .border(width = 1.dp, color = Color.White, shape = RectangleShape)
-        )
+    Box {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            val modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+            Box(
+                modifier = modifier
+                    .background(Color.Red)
+                    .border(width = 1.dp, color = Color.White, shape = RectangleShape)
+            )
+            Box(
+                modifier = modifier
+                    .background(Color.Green)
+                    .border(width = 1.dp, color = Color.White, shape = RectangleShape)
+            )
+            Box(
+                modifier = modifier
+                    .background(Color.Blue)
+                    .border(width = 1.dp, color = Color.White, shape = RectangleShape)
+            )
+        }
     }
 }
 

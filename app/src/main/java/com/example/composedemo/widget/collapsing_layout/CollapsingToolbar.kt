@@ -16,11 +16,11 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
 @Composable
-fun CollapsingToolbar(
+fun CollapsingTitleBar(
+    offset: Float,
     toolbarHeight: Dp = 56.dp,
     toolbarBackground: Color = Color.Transparent,
-    offset: Float,
-    title: (@Composable () -> Unit)? = null,
+    collapsingTitle: (@Composable () -> Unit)? = null,
     navigationIcon: (@Composable () -> Unit)? = null,
     content: (@Composable () -> Unit)? = null,
     onSizeChanged: (collapsingTooBarHeight: Int, maxScrollDistance: Int) -> Unit
@@ -64,7 +64,39 @@ fun CollapsingToolbar(
                 .offset { IntOffset(x = -((offset / maxScrollableHeight) * titleHorizontalOffset).roundToInt(), y = 0) },
             contentAlignment = Alignment.CenterStart
         ) {
-            title?.invoke()
+            collapsingTitle?.invoke()
+        }
+    }
+}
+
+@Composable
+fun CollapsingToolbar(
+    offset: Float,
+    toolbar: @Composable () -> Unit,
+    content: (@Composable () -> Unit)? = null,
+    onSizeChanged: (collapsingTooBarHeight: Int, maxScrollDistance: Int) -> Unit
+) {
+    val collapsingToolbarHeight = remember { mutableStateOf(0) }
+    val toolbarHeight = remember { mutableStateOf(0) }
+    val maxScrollableHeight = collapsingToolbarHeight.value - toolbarHeight.value
+    if (collapsingToolbarHeight.value > 0 && maxScrollableHeight > 0) {
+        onSizeChanged(collapsingToolbarHeight.value, maxScrollableHeight)
+    }
+    Box(modifier = Modifier
+        .onSizeChanged { collapsingToolbarHeight.value = it.height }
+        .offset { IntOffset(x = 0, y = offset.roundToInt()) }
+        .fillMaxWidth()
+    ) {
+        content?.invoke()
+        // navigation icon
+        Row(
+            modifier = Modifier
+                .onSizeChanged { toolbarHeight.value = it.height }
+                .offset { IntOffset(x = 0, y = -offset.roundToInt()) } // fix navigation icon position.
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            toolbar()
         }
     }
 }

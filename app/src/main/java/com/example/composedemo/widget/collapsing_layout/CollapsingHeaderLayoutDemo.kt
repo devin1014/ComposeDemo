@@ -25,13 +25,16 @@ fun CollapsingHeaderDemo() {
     val collapsing = remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxSize()) {
         CollapsingHeaderLayout(
-            toolbarBackground = Color.Black,
-            navigationIcon = {
-                NavigationIcon()
+            toolbar = {
+                Toolbar()
             },
-            title = {
-                Title()
-            },
+//            toolbarBackground = Color.Black,
+//            navigationIcon = {
+//                NavigationIcon()
+//            },
+//            title = {
+//                Title()
+//            },
             headerContent = {
                 if (!collapsing.value) {
                     Header()
@@ -138,5 +141,20 @@ fun ScrollableContent() {
                 .background(Color.Blue)
                 .border(width = 1.dp, color = Color.White, shape = RectangleShape)
         )
+    }
+}
+
+@Composable
+fun Toolbar() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .background(color = Color.Black),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        NavigationIcon()
+        Spacer(modifier = Modifier.width(12.dp))
+        Title()
     }
 }

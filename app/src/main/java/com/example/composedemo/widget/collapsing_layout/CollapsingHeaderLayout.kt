@@ -27,12 +27,13 @@ fun CollapsingHeaderLayout(
     title: (@Composable () -> Unit)? = null,
     navigationIcon: (@Composable () -> Unit)? = null,
     headerContent: (@Composable () -> Unit)? = null,
-    toolbarBackground: Color = Color.Transparent,
     contentSticker: (@Composable () -> Unit)? = null,
     lazyColumnContent: (LazyListScope.() -> Unit)? = null,
     scrollableContent: (@Composable () -> Unit)? = null,
     onCollapsingChanged: ((percent: Int) -> Unit)? = null,
+    toolbar: (@Composable () -> Unit)? = null,
     toolbarHeight: Dp = 56.dp,
+    toolbarBackground: Color = Color.Transparent,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -104,17 +105,28 @@ fun CollapsingHeaderLayout(
                     }
                 }
             }
-            // collapsing tool bar
-            CollapsingToolbar(
-                toolbarHeight = toolbarHeight,
-                offset = collapsingToolBarScrollState.value,
-                navigationIcon = navigationIcon,
-                title = title,
-                content = headerContent,
-                toolbarBackground = toolbarBackground
-            ) { collapsingToolbarHeight, maxScrollDistance ->
-                collapsingToolBarHeight.value = collapsingToolbarHeight
-                maxUpPx.value = maxScrollDistance.toFloat()
+
+            if (toolbar != null) {
+                CollapsingToolbar(
+                    offset = collapsingToolBarScrollState.value,
+                    content = headerContent,
+                    toolbar = toolbar
+                ) { collapsingToolbarHeight, maxScrollDistance ->
+                    collapsingToolBarHeight.value = collapsingToolbarHeight
+                    maxUpPx.value = maxScrollDistance.toFloat()
+                }
+            } else {
+                CollapsingTitleBar(
+                    toolbarHeight = toolbarHeight,
+                    offset = collapsingToolBarScrollState.value,
+                    navigationIcon = navigationIcon,
+                    collapsingTitle = title,
+                    content = headerContent,
+                    toolbarBackground = toolbarBackground
+                ) { collapsingToolbarHeight, maxScrollDistance ->
+                    collapsingToolBarHeight.value = collapsingToolbarHeight
+                    maxUpPx.value = maxScrollDistance.toFloat()
+                }
             }
         }
     }

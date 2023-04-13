@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,82 +22,121 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun CollapsingHeaderDemo() {
-    CollapsingHeaderLayout(
-        navigationIcon = {
-            IconButton(onClick = { }) {
-                Icon(
-                    imageVector = Filled.ArrowBack,
-                    contentDescription = "ArrowBack",
-                    tint = Color.White
-                )
+    val collapsing = remember { mutableStateOf(false) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        CollapsingHeaderLayout(
+            toolbarBackground = Color.Black,
+            navigationIcon = {
+                NavigationIcon()
+            },
+            title = {
+                Title()
+            },
+            headerContent = {
+                if (!collapsing.value) {
+                    Header()
+                }
+            },
+            contentSticker = {
+                Sticker()
+            },
+            lazyColumnContent = {
+                items(100) { index ->
+                    Text(
+                        "I'm item $index",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
+                }
+            },
+            scrollableContent = {
+                ScrollableContent()
+            },
+            onCollapsingChanged = { percent ->
+                collapsing.value = percent >= 98
             }
-        },
-        title = {
-            Text(
-                text = "title",
-                color = Color.White,
-                modifier = Modifier.padding(start = 8.dp),
-                fontSize = 20.sp
-            )
-        },
-        header = {
+        )
+        if (collapsing.value) {
             Box(
                 modifier = Modifier
-                    .height(200.dp)
-                    .fillMaxWidth()
-                    .background(Color.Black)
-            )
-        },
-        contentSticker = {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .background(color = Color.Cyan)
+                    .padding(20.dp)
+                    .fillMaxWidth(0.5f)
+                    .align(Alignment.BottomEnd)
             ) {
-                Text(text = "Sticker", modifier = Modifier.align(Alignment.Center))
-            }
-        },
-        lazyColumnContent = {
-            items(100) { index ->
-                Text(
-                    "I'm item $index",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-            }
-        },
-        scrollableContent = {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                val modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                Box(
-                    modifier = modifier
-                        .background(Color.Red)
-                        .border(width = 1.dp, color = Color.White, shape = RectangleShape)
-                )
-                Box(
-                    modifier = modifier
-                        .background(Color.Green)
-                        .border(width = 1.dp, color = Color.White, shape = RectangleShape)
-                )
-                Box(
-                    modifier = modifier
-                        .background(Color.Blue)
-                        .border(width = 1.dp, color = Color.White, shape = RectangleShape)
-                )
-                Box(
-                    modifier = modifier
-                        .background(Color.Magenta)
-                        .border(width = 1.dp, color = Color.White, shape = RectangleShape)
-                )
+                Header()
             }
         }
+    }
+}
+
+@Composable
+fun NavigationIcon() {
+    IconButton(onClick = { }) {
+        Icon(
+            imageVector = Filled.ArrowBack,
+            contentDescription = "ArrowBack",
+            tint = Color.White
+        )
+    }
+}
+
+@Composable
+fun Title() {
+    Text(
+        text = "title",
+        color = Color.White,
+        modifier = Modifier.padding(start = 8.dp),
+        fontSize = 20.sp
     )
+}
+
+@Composable
+fun Header() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(ratio = 16 / 9f)
+            .background(Color.Black)
+    )
+}
+
+@Composable
+fun Sticker() {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(color = Color.Cyan)
+    ) {
+        Text(text = "Sticker", modifier = Modifier.align(Alignment.Center))
+    }
+}
+
+@Composable
+fun ScrollableContent() {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        val modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+        Box(
+            modifier = modifier
+                .background(Color.Red)
+                .border(width = 1.dp, color = Color.White, shape = RectangleShape)
+        )
+        Box(
+            modifier = modifier
+                .background(Color.Green)
+                .border(width = 1.dp, color = Color.White, shape = RectangleShape)
+        )
+        Box(
+            modifier = modifier
+                .background(Color.Blue)
+                .border(width = 1.dp, color = Color.White, shape = RectangleShape)
+        )
+    }
 }

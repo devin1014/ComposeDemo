@@ -1,11 +1,13 @@
 package com.example.composedemo.widget.collapsing_layout
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -16,10 +18,11 @@ import kotlin.math.roundToInt
 @Composable
 fun CollapsingToolbar(
     toolbarHeight: Dp = 56.dp,
+    toolbarBackground: Color = Color.Transparent,
     offset: Float,
     title: (@Composable () -> Unit)? = null,
     navigationIcon: (@Composable () -> Unit)? = null,
-    background: (@Composable () -> Unit)? = null,
+    content: (@Composable () -> Unit)? = null,
     onSizeChanged: (collapsingTooBarHeight: Int, maxScrollDistance: Int) -> Unit
 ) {
     val collapsingToolbarHeight = remember { mutableStateOf(0) }
@@ -35,13 +38,14 @@ fun CollapsingToolbar(
         .offset { IntOffset(x = 0, y = offset.roundToInt()) }
         .fillMaxWidth()
     ) {
-        background?.invoke()
+        content?.invoke()
         // navigation icon
         Row(
             modifier = Modifier
                 .offset { IntOffset(x = 0, y = -offset.roundToInt()) } // fix navigation icon position.
                 .height(toolbarHeight)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(color = toolbarBackground),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(

@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -17,6 +18,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
@@ -24,10 +26,12 @@ import kotlin.math.roundToInt
 fun CollapsingHeaderLayout(
     title: (@Composable () -> Unit)? = null,
     navigationIcon: (@Composable () -> Unit)? = null,
-    header: (@Composable () -> Unit)? = null,
+    headerContent: (@Composable () -> Unit)? = null,
+    toolbarBackground: Color = Color.Transparent,
     contentSticker: (@Composable () -> Unit)? = null,
     lazyColumnContent: (LazyListScope.() -> Unit)? = null,
     scrollableContent: (@Composable () -> Unit)? = null,
+    onCollapsingChanged: ((percent: Int) -> Unit)? = null,
     toolbarHeight: Dp = 56.dp,
 ) {
     Surface(
@@ -45,6 +49,7 @@ fun CollapsingHeaderLayout(
                             val delta = available.y
                             val newOffset = collapsingToolBarScrollState.value + delta
                             collapsingToolBarScrollState.value = newOffset.coerceIn(-maxUpPx.value, 0f)
+                            onCollapsingChanged?.invoke(abs((collapsingToolBarScrollState.value * 100f / maxUpPx.value).roundToInt()))
                             return Offset.Zero
                         }
                     }
@@ -105,7 +110,8 @@ fun CollapsingHeaderLayout(
                 offset = collapsingToolBarScrollState.value,
                 navigationIcon = navigationIcon,
                 title = title,
-                background = header
+                content = headerContent,
+                toolbarBackground = toolbarBackground
             ) { collapsingToolbarHeight, maxScrollDistance ->
                 collapsingToolBarHeight.value = collapsingToolbarHeight
                 maxUpPx.value = maxScrollDistance.toFloat()

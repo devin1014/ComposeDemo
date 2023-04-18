@@ -2,44 +2,51 @@ package com.example.composedemo
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.grid.GridCells.Adaptive
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.navArgument
 import com.example.composedemo.Menu.*
+import com.example.composedemo.R.string
 import com.example.composedemo.nav.NavPage1
 import com.example.composedemo.nav.NavPage2
 import com.example.composedemo.nav.NavViewModel
-import com.example.composedemo.widget.HorizontalPagerDemo
-import com.example.composedemo.widget.RowCombinePagerAdapter
 import com.example.composedemo.widget.RowCombineViewModel
-import com.example.composedemo.widget.collapsing_layout.CollapsingHeaderDemo
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+
+private val bgColors = listOf(Color.Cyan, Color.Magenta, Color.LightGray, Color.Yellow, Color.Blue, Color.Green)
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,43 +61,80 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainNavGraph(navController, navViewModel = navViewModel)
+            val appName = stringResource(id = string.app_name)
+            val title = remember { mutableStateOf(appName) }
+            navController.addOnDestinationChangedListener { controller, destination, arguments ->
+                Logging.info("OnDestinationChanged: ${destination.route}, arguments=${arguments.getInformation()}")
+                title.value = destination.route ?: title.value
+            }
+            MaterialTheme {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(text = title.value)
+                            },
+                            navigationIcon = {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                                }
+                            }
+                        )
+                    },
+                ) {
+                    MainNavGraph(
+                        modifier = Modifier.padding(it),
+                        navController,
+                        navViewModel = navViewModel,
+                        paddingValues = it
+                    )
+                }
+            }
         }
     }
 
     @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun MainNavGraph(
+        modifier: Modifier,
         navController: NavHostController,
-        navViewModel: NavViewModel
+        navViewModel: NavViewModel,
+        paddingValues: PaddingValues
     ) {
         AnimatedNavHost(
             navController = navController,
             startDestination = "main",
-            modifier = Modifier,
+            modifier = modifier,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }) {
-            main(navController)
-            navPage1(navController, navViewModel)
-            navPage2(navController)
-            composable(Pager.router) {
-                HorizontalPagerDemo()
+            composable(route = "main") {
+                LazyVerticalGrid(
+                    columns = Adaptive(minSize = 128.dp),
+                    content = {
+                        itemsIndexed(menuList) { index, menu ->
+                            Box(
+                                modifier = Modifier
+                                    .height(128.dp)
+                                    .background(color = bgColors[index % bgColors.size])
+                                    .clickable { navController.navigate(menu.router) },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = menu.name,
+                                    color = Color.Black,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    })
             }
-            rowCombinePager()
-            composable(ScrollableAppBar.router) {
-                CollapsingHeaderDemo()
-            }
-        }
-    }
-
-    @OptIn(ExperimentalAnimationApi::class)
-    private fun NavGraphBuilder.main(navController: NavHostController) {
-        composable(route = "main") { backStackEntry ->
-            MainPage { _, router ->
-                navController.navigate(router)
+            menuList.forEach { menu ->
+                composable(menu.router) { menu.content() }
             }
         }
     }
@@ -130,78 +174,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
-    private fun NavGraphBuilder.rowCombinePager() {
-        composable(route = RowPager.router) { _ ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-            ) {
-                val screenWidth = LocalContext.current.resources.displayMetrics.widthPixels
-                val viewModel: MyRowCombineViewModel by viewModels(
-                    factoryProducer = {
-                        object : ViewModelProvider.Factory {
-                            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                return MyRowCombineViewModel(
-                                    list = (1..100).map { it.toString() },
-                                    initPosition = 100 / 2,
-                                ) as T
-                            }
-                        }
-                    })
-                Logging.info("NavGraphBuilder.rowCombinePager, position=${viewModel.position.collectAsState().value}")
-                RowCombinePagerAdapter(
-                    viewModel = viewModel,
-                    horizontalItem = { position, item, onClick ->
-                        Box(
-                            modifier = Modifier
-                                .width(48.dp)
-                                .height(64.dp)
-                                .padding(2.dp)
-                                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(24.dp))
-                                .clickable { onClick.invoke() }
-                        ) {
-                            Text(
-                                position.toString(),
-                                modifier = Modifier.align(Alignment.Center),
-                                fontSize = 16.sp
-                            )
-                        }
-                    },
-                    pagerItem = { position, item ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Cyan)
-                        ) {
-                            Text(
-                                position.toString(),
-                                modifier = Modifier.align(Alignment.Center),
-                                fontSize = 32.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                )
-                // anchor view
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .align(Alignment.Center)
-                        .background(Color.Red)
-                )
-                Box(
-                    modifier = Modifier
-                        .width(1.dp)
-                        .fillMaxHeight()
-                        .align(Alignment.Center)
-                        .background(Color.Red)
-                )
-            }
-        }
-    }
 }
 
 class MyRowCombineViewModel(

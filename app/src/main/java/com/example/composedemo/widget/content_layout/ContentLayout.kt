@@ -1,4 +1,4 @@
-package com.example.composedemo.framework
+package com.example.composedemo.widget.content_layout
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
@@ -17,6 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.composedemo.widget.content_layout.State.ERROR
+import com.example.composedemo.widget.content_layout.State.INIT
+import com.example.composedemo.widget.content_layout.State.LOADING
+import com.example.composedemo.widget.content_layout.State.NO_DATA
+import com.example.composedemo.widget.content_layout.State.REFRESH
+import com.example.composedemo.widget.content_layout.State.SUCCESS
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -31,11 +37,11 @@ fun <T : Any> ContentLayout(
     val state = viewModel.state.observeAsState()
     Box {
         when (state.value) {
-            State.REFRESH -> {} // do nothing.
-            State.LOADING -> loading()
-            State.ERROR -> error(viewModel.exception.value)
-            State.NO_DATA -> noData()
-            State.SUCCESS -> {
+            REFRESH -> {} // do nothing.
+            LOADING -> loading()
+            ERROR -> error(viewModel.exception.value)
+            NO_DATA -> noData()
+            SUCCESS -> {
                 val data = remember { mutableStateOf(viewModel.responseData.value) }
                 if (data.value == null) {
                     noData()
@@ -49,23 +55,23 @@ fun <T : Any> ContentLayout(
 }
 
 abstract class BaseViewModel<T> : ViewModel() {
-    val state = MutableLiveData(State.INIT)
+    val state = MutableLiveData(INIT)
     val exception: MutableLiveData<Exception?> = MutableLiveData(null)
     val responseData: MutableLiveData<T?> = MutableLiveData(null)
 
     protected fun loadData(requestData: suspend () -> T?) {
         viewModelScope.launch {
-            state.value = State.LOADING
+            state.value = LOADING
             val response = requestData()
             if (response != null) {
                 if (isEmptyData(response)) {
-                    state.value = State.NO_DATA
+                    state.value = NO_DATA
                 } else {
-                    state.value = State.SUCCESS
+                    state.value = SUCCESS
                     responseData.value = response
                 }
             } else {
-                state.value = State.ERROR
+                state.value = ERROR
                 exception.value = Exception("error")
             }
         }

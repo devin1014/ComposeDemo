@@ -1,4 +1,4 @@
-package com.example.composedemo.framework
+package com.example.composedemo.widget.content_layout
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

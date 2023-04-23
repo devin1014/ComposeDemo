@@ -20,15 +20,23 @@ import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush.Companion.horizontalGradient
 import androidx.compose.ui.graphics.Brush.Companion.linearGradient
 import androidx.compose.ui.graphics.Brush.Companion.radialGradient
 import androidx.compose.ui.graphics.Brush.Companion.sweepGradient
 import androidx.compose.ui.graphics.Brush.Companion.verticalGradient
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
 val brushColors = listOf(Color.Red, Color.Green, Color.Blue)
@@ -140,13 +148,41 @@ fun ModifierClip() {
                 .background(color = Color.White)
         )
         CommonSpacer()
-        Box(modifier = bgModifier)
+        Box(
+            modifier = bgModifier
+                .clip(SquashedOval())
+                .background(color = Color.White)
+        )
         CommonSpacer()
-        Box(modifier = bgModifier)
+        Box(
+            modifier = bgModifier
+                .clip(TriangleShape())
+                .background(color = Color.White)
+        )
         CommonSpacer()
-        Box(modifier = bgModifier)
+        Box(
+            modifier = bgModifier
+                .clip(StarShape())
+                .background(color = Color.White)
+        )
         CommonSpacer()
-        Box(modifier = bgModifier)
+        Box(
+            modifier = bgModifier
+                .clip(object : Shape {
+                    override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
+                        val path = Path().apply {
+                            moveTo(0f, 0f)
+                            addArc(Rect(Offset(0f, 0f), size.width / 2), 0f, 90f)
+//                            moveTo(size.width/2, size.height)
+//                            addArc(Rect(Offset(size.width/2, size.height), size.width / 2), 0f, -90f)
+//                            arcTo(Rect(Offset(size.width / 2, size.height), size.width / 2), 270f, 360f,true)
+                            close()
+                        }
+                        return Outline.Generic(path)
+                    }
+                })
+                .background(color = Color.White)
+        )
         CommonSpacer()
     }
 }
@@ -170,3 +206,4 @@ fun CommonSpacer(width: Dp = 4.dp) {
 fun ModifierDemoPreview() {
     ModifierDemo()
 }
+

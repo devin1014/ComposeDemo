@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import com.example.composedemo.Menu.CanvasSample
 import com.example.composedemo.Menu.CollapsingHeader
 import com.example.composedemo.Menu.HorizontalPager
+import com.example.composedemo.Menu.ImageFilterSample
 import com.example.composedemo.Menu.ModifierDrawSample
 import com.example.composedemo.Menu.ModifierSample
 import com.example.composedemo.Menu.Nav1
@@ -12,6 +13,7 @@ import com.example.composedemo.Menu.RowPager
 import com.example.composedemo.widget.RowPagerDemo
 import com.example.composedemo.widget.collapsing_layout.CollapsingHeaderDemo
 import com.example.composedemo.widget.modifier.CanvasDrawDemo
+import com.example.composedemo.widget.modifier.ImageFilterDemo
 import com.example.composedemo.widget.modifier.ModifierDemo
 import com.example.composedemo.widget.modifier.ModifierDrawDemo
 import com.example.composedemo.widget.pager.HorizontalPagerDemo
@@ -29,9 +31,11 @@ sealed class Menu(val name: String, val router: String, val content: (@Composabl
     object ModifierSample : Menu("Modifier", "modifier", { ModifierDemo() })
     object CanvasSample : Menu("Canvas", "canvas", { CanvasDrawDemo() })
     object ModifierDrawSample : Menu("ModifierDraw", "modifierDraw", { ModifierDrawDemo() })
+    object ImageFilterSample : Menu("ImageFilter", "imageFilter", { ImageFilterDemo() })
 }
 
 val menuList = listOf(
     Nav1, HorizontalPager, RowPager, CollapsingHeader,
-    Refresh, ModifierSample, CanvasSample, ModifierDrawSample
+    Refresh, ModifierSample, CanvasSample, ModifierDrawSample,
+    ImageFilterSample
 )

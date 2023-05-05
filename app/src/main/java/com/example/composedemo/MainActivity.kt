@@ -120,7 +120,8 @@ class MainActivity : AppCompatActivity() {
                                 modifier = Modifier
                                     .height(128.dp)
                                     .background(color = bgColors[index % bgColors.size])
-                                    .clickable { navController.navigate(menu.router) },
+                                    .clickable { navController.navigate(menu.router) }
+                                    .padding(12.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(

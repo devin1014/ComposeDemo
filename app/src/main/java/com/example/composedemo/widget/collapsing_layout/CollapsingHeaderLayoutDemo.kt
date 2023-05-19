@@ -1,6 +1,5 @@
 package com.example.composedemo.widget.collapsing_layout
 
-import android.preference.PreferenceActivity.Header
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box

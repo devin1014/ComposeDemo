@@ -5,6 +5,16 @@ import android.os.Bundle
 import android.util.Log
 
 object Logging {
+    fun d(msg: String) {
+        Log.d("ComposeDemo", msg)
+    }
+    fun debug(msg: String) {
+        Log.d("ComposeDemo", msg)
+    }
+    fun i(msg: String) {
+        Log.i("ComposeDemo", msg)
+    }
+
     fun info(msg: String) {
         Log.i("ComposeDemo", msg)
     }

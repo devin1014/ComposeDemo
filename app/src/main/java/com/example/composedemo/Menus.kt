@@ -9,10 +9,11 @@ import com.example.composedemo.Menu.HorizontalPager
 import com.example.composedemo.Menu.ImageFilterSample
 import com.example.composedemo.Menu.ModifierDrawSample
 import com.example.composedemo.Menu.ModifierSample
-import com.example.composedemo.Menu.Nav1
+import com.example.composedemo.Menu.NavSample
 import com.example.composedemo.Menu.Refresh
 import com.example.composedemo.Menu.RowPager
 import com.example.composedemo.Menu.ScrollSample
+import com.example.composedemo.nav.NavDemo
 import com.example.composedemo.widget.RowPagerDemo
 import com.example.composedemo.widget.collapsing_layout.CollapsingHeaderDemo
 import com.example.composedemo.widget.command.CommandDemo
@@ -27,8 +28,7 @@ import com.example.composedemo.widget.scroll.ScrollDemo
 
 
 sealed class Menu(val name: String, val router: String, val content: (@Composable () -> Unit)) {
-    object Nav1 : Menu("Nav", "navPage1", {})
-    object Nav2 : Menu("Nav2", "navPage2", {})
+    object NavSample : Menu("Nav", "navPage", { NavDemo() })
     object HorizontalPager : Menu("HorizontalPager", "horizontalPager", { HorizontalPagerDemo() })
     object RowPager : Menu("RowPager", "rowPager", { RowPagerDemo() })
     object CollapsingHeader : Menu("CollapsingHeader", "collapsingHeader", { CollapsingHeaderDemo() })
@@ -43,7 +43,7 @@ sealed class Menu(val name: String, val router: String, val content: (@Composabl
 }
 
 val menuList = listOf(
-    Nav1, HorizontalPager, RowPager, CollapsingHeader,
+    NavSample, HorizontalPager, RowPager, CollapsingHeader,
     Refresh, ModifierSample, CanvasSample, ModifierDrawSample,
     ImageFilterSample, FocusSample, CommandSample,
     ScrollSample,

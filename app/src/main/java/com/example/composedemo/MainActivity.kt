@@ -31,16 +31,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
-import androidx.navigation.navArgument
 import com.example.composedemo.Menu.*
 import com.example.composedemo.R.string
-import com.example.composedemo.nav.NavPage1
-import com.example.composedemo.nav.NavPage2
-import com.example.composedemo.nav.NavViewModel
 import com.example.composedemo.widget.RowCombineViewModel
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -49,8 +44,6 @@ import com.google.accompanist.navigation.animation.composable
 private val bgColors = listOf(Color.Cyan, Color.Magenta, Color.LightGray, Color.Yellow, Color.Blue, Color.Green)
 
 class MainActivity : AppCompatActivity() {
-
-    private val navViewModel = NavViewModel(2)
 
     @OptIn(ExperimentalAnimationApi::class)
     private val navController: NavHostController by lazy {
@@ -89,8 +82,6 @@ class MainActivity : AppCompatActivity() {
                     MainNavGraph(
                         modifier = Modifier.padding(it),
                         navController,
-                        navViewModel = navViewModel,
-                        paddingValues = it
                     )
                 }
             }
@@ -102,12 +93,11 @@ class MainActivity : AppCompatActivity() {
     fun MainNavGraph(
         modifier: Modifier,
         navController: NavHostController,
-        navViewModel: NavViewModel,
-        paddingValues: PaddingValues
     ) {
         AnimatedNavHost(
             navController = navController,
             startDestination = "main",
+            route = "list",
             modifier = modifier,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }) {
@@ -137,41 +127,6 @@ class MainActivity : AppCompatActivity() {
             menuList.forEach { menu ->
                 composable(menu.router) { menu.content() }
             }
-        }
-    }
-
-    @OptIn(ExperimentalAnimationApi::class)
-    private fun NavGraphBuilder.navPage1(
-        navController: NavHostController,
-        viewModel: NavViewModel
-    ) {
-        composable(route = Nav1.router) { backStackEntry ->
-            backStackEntry.arguments?.get("value")?.let {
-                (it as? Int).apply {
-                    viewModel.result.value = this
-                }
-            }
-            NavPage1(
-                viewModel = viewModel
-            ) {
-                navController.navigate("${Nav2.router}?param=${it}")
-            }
-        }
-    }
-
-    @OptIn(ExperimentalAnimationApi::class)
-    private fun NavGraphBuilder.navPage2(navController: NavHostController) {
-        composable(
-            route = "${Nav2.router}?param={param}",
-            arguments = listOf(navArgument("param") { defaultValue = -1 })
-        ) { backStackEntry ->
-            NavPage2(
-                param = backStackEntry.arguments?.getInt("param") ?: -1,
-                onClick = {
-                    navController.previousBackStackEntry?.arguments?.putInt("value", it)
-                    navController.popBackStack()
-                }
-            )
         }
     }
 

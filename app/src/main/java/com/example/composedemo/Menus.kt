@@ -9,10 +9,10 @@ import com.example.composedemo.Menu.HorizontalPager
 import com.example.composedemo.Menu.ImageFilterSample
 import com.example.composedemo.Menu.ModifierDrawSample
 import com.example.composedemo.Menu.ModifierSample
+import com.example.composedemo.Menu.MultipleScrollSample
 import com.example.composedemo.Menu.NavSample
 import com.example.composedemo.Menu.Refresh
 import com.example.composedemo.Menu.RowPager
-import com.example.composedemo.Menu.ScrollSample
 import com.example.composedemo.nav.NavDemo
 import com.example.composedemo.widget.RowPagerDemo
 import com.example.composedemo.widget.collapsing_layout.CollapsingHeaderDemo
@@ -24,7 +24,7 @@ import com.example.composedemo.widget.modifier.ModifierDemo
 import com.example.composedemo.widget.modifier.ModifierDrawDemo
 import com.example.composedemo.widget.pager.HorizontalPagerDemo
 import com.example.composedemo.widget.refresh.RefreshDemo
-import com.example.composedemo.widget.scroll.ScrollDemo
+import com.example.composedemo.widget.scroll.MultipleScrollDemo
 
 
 sealed class Menu(val name: String, val router: String, val content: (@Composable () -> Unit)) {
@@ -39,12 +39,12 @@ sealed class Menu(val name: String, val router: String, val content: (@Composabl
     object ImageFilterSample : Menu("ImageFilter", "imageFilter", { ImageFilterDemo() })
     object FocusSample : Menu("FocusSample", "focusSample", { FocusDemo() })
     object CommandSample : Menu("CommandSample", "commandSample", { CommandDemo() })
-    object ScrollSample : Menu("ScrollSample", "scrollSample", { ScrollDemo() })
+    object MultipleScrollSample : Menu("MultipleScrollSample", "multipleScrollSample", { MultipleScrollDemo() })
 }
 
 val menuList = listOf(
     NavSample, HorizontalPager, RowPager, CollapsingHeader,
     Refresh, ModifierSample, CanvasSample, ModifierDrawSample,
     ImageFilterSample, FocusSample, CommandSample,
-    ScrollSample,
+    MultipleScrollSample,
 )

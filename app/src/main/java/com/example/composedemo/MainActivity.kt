@@ -1,5 +1,6 @@
 package com.example.composedemo
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -60,23 +61,33 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val appName = stringResource(id = string.app_name)
             val title = remember { mutableStateOf(appName) }
+            val toolbarVisible = remember { mutableStateOf(true) }
             navController.addOnDestinationChangedListener { controller, destination, arguments ->
                 Logging.info("OnDestinationChanged: ${destination.route}, arguments=${arguments.getInformation()}")
                 title.value = destination.route ?: title.value
+                requestedOrientation = if (destination.route == MultipleScrollSample.router) {
+                    toolbarVisible.value = false
+                    ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                } else {
+                    toolbarVisible.value = true
+                    ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                }
             }
             MaterialTheme {
                 Scaffold(
                     topBar = {
-                        TopAppBar(
-                            title = {
-                                Text(text = title.value)
-                            },
-                            navigationIcon = {
-                                IconButton(onClick = { navController.popBackStack() }) {
-                                    Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                        if (toolbarVisible.value) {
+                            TopAppBar(
+                                title = {
+                                    Text(text = title.value)
+                                },
+                                navigationIcon = {
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(Icons.Filled.ArrowBack, contentDescription = "")
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     },
                 ) {
                     MainNavGraph(

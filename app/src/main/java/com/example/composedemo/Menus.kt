@@ -13,6 +13,7 @@ import com.example.composedemo.Menu.MultipleScrollSample
 import com.example.composedemo.Menu.NavSample
 import com.example.composedemo.Menu.Refresh
 import com.example.composedemo.Menu.RowPager
+import com.example.composedemo.Menu.TouchSample
 import com.example.composedemo.nav.NavDemo
 import com.example.composedemo.widget.RowPagerDemo
 import com.example.composedemo.widget.collapsing_layout.CollapsingHeaderDemo
@@ -25,6 +26,7 @@ import com.example.composedemo.widget.modifier.ModifierDrawDemo
 import com.example.composedemo.widget.pager.HorizontalPagerDemo
 import com.example.composedemo.widget.refresh.RefreshDemo
 import com.example.composedemo.widget.scroll.MultipleScrollDemo
+import com.example.composedemo.widget.scroll.TouchDemo
 
 
 sealed class Menu(val name: String, val router: String, val content: (@Composable () -> Unit)) {
@@ -40,11 +42,12 @@ sealed class Menu(val name: String, val router: String, val content: (@Composabl
     object FocusSample : Menu("FocusSample", "focusSample", { FocusDemo() })
     object CommandSample : Menu("CommandSample", "commandSample", { CommandDemo() })
     object MultipleScrollSample : Menu("MultipleScrollSample", "multipleScrollSample", { MultipleScrollDemo() })
+    object TouchSample : Menu("TouchSample", "touchSample", { TouchDemo() })
 }
 
 val menuList = listOf(
     NavSample, HorizontalPager, RowPager, CollapsingHeader,
     Refresh, ModifierSample, CanvasSample, ModifierDrawSample,
     ImageFilterSample, FocusSample, CommandSample,
-    MultipleScrollSample,
+    MultipleScrollSample, TouchSample,
 )

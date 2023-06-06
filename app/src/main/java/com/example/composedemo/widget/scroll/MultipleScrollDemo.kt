@@ -43,10 +43,10 @@ fun MultipleScrollDemo() {
             with(LocalDensity) { Logging.info("density: ${this.current.density}") }
             loggingDensity.value = true
         }
-        val firstScrollState = rememberLazyListState()
-        val secondScrollState = rememberLazyListState()
+        val contentVerticalScrollState = rememberLazyListState()
+        val columnTitleScrollState = rememberLazyListState()
         val totalScrollOffset = remember { mutableStateOf(0) }
-        if (firstScrollState.isScrollInProgress) {
+        if (contentVerticalScrollState.isScrollInProgress) {
             //进入组合后只会启动一次，
             DisposableEffect(Unit) {
                 onDispose {
@@ -54,17 +54,17 @@ fun MultipleScrollDemo() {
                 }
             }
             //记录上一次第一个可见item的滑动偏移
-            val lastFirstVisibleItemScrollOffset = remember { mutableStateOf(firstScrollState.firstVisibleItemScrollOffset) }
+            val lastFirstVisibleItemScrollOffset = remember { mutableStateOf(contentVerticalScrollState.firstVisibleItemScrollOffset) }
             //记录上一次第一个可见item下标
-            val lastFirstVisibleItemIndex = remember { mutableStateOf(firstScrollState.firstVisibleItemIndex) }
+            val lastFirstVisibleItemIndex = remember { mutableStateOf(contentVerticalScrollState.firstVisibleItemIndex) }
 
             run {
-                val currentFirstVisibleItemIndex = firstScrollState.firstVisibleItemIndex
+                val currentFirstVisibleItemIndex = contentVerticalScrollState.firstVisibleItemIndex
                 //手指向上滑动（即正方向）时offset会变大，向下时变小
-                val currentFirstVisibleItemScrollOffset = firstScrollState.firstVisibleItemScrollOffset
+                val currentFirstVisibleItemScrollOffset = contentVerticalScrollState.firstVisibleItemScrollOffset
                 //第一个可见的item改变了
                 if (currentFirstVisibleItemIndex != lastFirstVisibleItemIndex.value) {
-                    totalScrollOffset.value = totalScrollOffset.value + firstScrollState.firstVisibleItemScrollOffset
+                    totalScrollOffset.value = totalScrollOffset.value + contentVerticalScrollState.firstVisibleItemScrollOffset
                     if (currentFirstVisibleItemIndex < lastFirstVisibleItemIndex.value) {
                         //Logging.i("向下滑动↓")
                     } else if (currentFirstVisibleItemIndex > lastFirstVisibleItemIndex.value) {
@@ -87,14 +87,15 @@ fun MultipleScrollDemo() {
                 lastFirstVisibleItemScrollOffset.value = currentFirstVisibleItemScrollOffset
             }
             LaunchedEffect(key1 = totalScrollOffset.value, block = {
-                secondScrollState.scrollToItem(firstScrollState.firstVisibleItemIndex, firstScrollState.firstVisibleItemScrollOffset)
+                columnTitleScrollState.scrollToItem(contentVerticalScrollState.firstVisibleItemIndex, contentVerticalScrollState.firstVisibleItemScrollOffset)
             })
         }
+        // column title
         LazyColumn(
             modifier = Modifier
                 .width(120.dp)
                 .fillMaxHeight(),
-            state = firstScrollState,
+            state = columnTitleScrollState,
             content = {
                 items(columns) {
                     Box(
@@ -110,9 +111,10 @@ fun MultipleScrollDemo() {
             }
         )
         val rowScrollStateArray = remember { mutableMapOf<Int, ScrollState?>() }
+        val currentScrollOffset = remember { mutableStateOf(0) }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            state = secondScrollState,
+            state = contentVerticalScrollState,
             content = {
                 items(columns) {
                     Box(
@@ -122,17 +124,13 @@ fun MultipleScrollDemo() {
                             .background(color = colors[(it + 1) % colors.size]),
                         contentAlignment = Alignment.Center
                     ) {
-//                        Text(text = it.toString(), fontSize = 20.sp)
-//                        LazyRow(content = {
-//                            items(20) { rowItem ->
-//                                Text(text = rowItem.toString(), fontSize = 20.sp)
-//                            }
-//                        })
-                        val itemRowScrollState: ScrollState = rowScrollStateArray[it] ?: rememberScrollState()
+                        val itemRowScrollState: ScrollState = rowScrollStateArray[it] ?: rememberScrollState(currentScrollOffset.value)
                         rowScrollStateArray[it] = itemRowScrollState
                         LaunchedEffect(key1 = itemRowScrollState) {
+                            Logging.i("LaunchedEffect: $it")
                             snapshotFlow { itemRowScrollState.value }.collect { scrollOffset ->
-                                Logging.d("ScrollState: $scrollOffset")
+                                Logging.d("ScrollState[$it]: $scrollOffset")
+                                currentScrollOffset.value = scrollOffset
                                 rowScrollStateArray.values.filterNotNull().forEach { innerState ->
                                     if (innerState != itemRowScrollState) {
                                         innerState.scrollTo(scrollOffset)
@@ -148,7 +146,7 @@ fun MultipleScrollDemo() {
                             repeat(20) { rowItem ->
                                 Text(
                                     modifier = Modifier.width(120.dp),
-                                    text = rowItem.toString(),
+                                    text = "$it${rowItem + 1}",
                                     textAlign = TextAlign.Center,
                                     fontSize = 20.sp
                                 )

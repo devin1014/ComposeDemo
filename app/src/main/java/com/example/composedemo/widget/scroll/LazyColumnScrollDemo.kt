@@ -18,15 +18,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composedemo.Logging
+import com.example.composedemo.resources.getItemColor
 import com.example.composedemo.widget.toPix
 
 private val lists = (1..30).toList()
-private val colors = listOf(Color.Cyan, Color.Blue, Color.Green, Color.DarkGray, Color.Magenta)
 
 @Composable
 fun LazyColumnScrollDemo() {
@@ -55,7 +54,7 @@ fun LazyColumnScrollDemo() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(100.dp)
-                                .background(color = colors[it % colors.size]), data = it.toString()
+                                .background(color = getItemColor(it)), data = it.toString()
                         )
                     }
                 })
@@ -69,7 +68,7 @@ fun LazyColumnScrollDemo() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(100.dp)
-                                .background(color = colors[it % colors.size]), data = it.toString()
+                                .background(color = getItemColor(it)), data = it.toString()
                         )
                     }
                 })

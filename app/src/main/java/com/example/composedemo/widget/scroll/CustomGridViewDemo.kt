@@ -2,10 +2,8 @@ package com.example.composedemo.widget.scroll
 
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-
-private val colors = listOf(Color.Cyan, Color.Blue, Color.Green, Color.DarkGray, Color.Magenta)
+import com.example.composedemo.resources.getItemColor
 
 @Composable
 fun CustomGridViewDemo() {
@@ -13,7 +11,7 @@ fun CustomGridViewDemo() {
         factory = CustomGridViewFactoryImpl,
         item = { modifier, row, column, data ->
             ListItem(
-                modifier = modifier.background(color = colors[row % colors.size]),
+                modifier = modifier.background(color = getItemColor(row)),
                 data = data.toString()
             )
         }

@@ -14,11 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.composedemo.resources.getItemColor
 
 private val list = (1..30).toList()
-private val colors = listOf(Color.Cyan, Color.Blue, Color.Green, Color.DarkGray, Color.Magenta)
 
 @Composable
 fun RowScrollableDemo() {
@@ -44,7 +43,7 @@ fun RowScrollableDemo() {
                     ListItem(
                         modifier = Modifier
                             .size(100.dp)
-                            .background(color = colors[it % colors.size]), data = it.toString()
+                            .background(color = getItemColor(it)), data = it.toString()
                     )
                 }
             }
@@ -57,7 +56,7 @@ fun RowScrollableDemo() {
                     ListItem(
                         modifier = Modifier
                             .size(100.dp)
-                            .background(color = colors[it % colors.size]), data = it.toString()
+                            .background(color = getItemColor(it)), data = it.toString()
                     )
                 }
             }
@@ -72,7 +71,7 @@ fun RowScrollableDemo() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp)
-                        .background(color = colors[0]), data = "666"
+                        .background(color = getItemColor(0)), data = "666"
                 )
 //                }
             }
@@ -85,7 +84,7 @@ fun RowScrollableDemo() {
                     ListItem(
                         modifier = Modifier
                             .size(100.dp)
-                            .background(color = colors[it % colors.size]), data = it.toString()
+                            .background(color = getItemColor(it)), data = it.toString()
                     )
                 }
             }

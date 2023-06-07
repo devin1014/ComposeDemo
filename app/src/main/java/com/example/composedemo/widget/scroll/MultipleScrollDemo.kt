@@ -24,16 +24,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composedemo.Logging
+import com.example.composedemo.resources.getItemColor
 
 private val columns = (1..20).toList()
-private val colors = listOf(Color.Cyan, Color.Blue, Color.Green, Color.DarkGray, Color.Magenta)
 
 @Composable
 fun MultipleScrollDemo() {
@@ -102,7 +101,7 @@ fun MultipleScrollDemo() {
                         modifier = Modifier
                             .width(120.dp)
                             .height(90.dp)
-                            .background(color = colors[it % colors.size]),
+                            .background(color = getItemColor(it)),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(text = it.toString(), fontSize = 20.sp)
@@ -121,7 +120,7 @@ fun MultipleScrollDemo() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(90.dp)
-                            .background(color = colors[(it + 1) % colors.size]),
+                            .background(color = getItemColor(it)),
                         contentAlignment = Alignment.Center
                     ) {
                         val itemRowScrollState: ScrollState = rowScrollStateArray[it] ?: rememberScrollState(currentScrollOffset.value)

@@ -1,0 +1,94 @@
+package com.example.composedemo.widget.scroll
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+
+private val list = (1..30).toList()
+private val colors = listOf(Color.Cyan, Color.Blue, Color.Green, Color.DarkGray, Color.Magenta)
+
+@Composable
+fun RowScrollableDemo() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column {
+            val horizontalScrollState = rememberScrollState()
+            val scrollState2 = rememberScrollState()
+            val scrollState3 = rememberScrollState()
+            val scrollState4 = rememberScrollState()
+            LaunchedEffect(key1 = horizontalScrollState, block = {
+                snapshotFlow { horizontalScrollState.value }.collect {
+                    scrollState2.scrollTo(it)
+                    scrollState3.scrollTo(it)
+                    scrollState4.scrollTo(it)
+                }
+            })
+            Row(
+                modifier = Modifier
+                    .height(100.dp)
+                    .horizontalScroll(horizontalScrollState)
+            ) {
+                list.forEach {
+                    ListItem(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(color = colors[it % colors.size]), index = it
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .height(100.dp)
+                    .horizontalScroll(scrollState2)
+            ) {
+                list.forEach {
+                    ListItem(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(color = colors[it % colors.size]), index = it
+                    )
+                }
+            }
+            //disable row
+            Row(
+                modifier = Modifier
+                    .height(100.dp)
+//                    .horizontalScroll(scrollState3, enabled = false)
+            ) {
+//                list.forEach {
+                ListItem(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .background(color = colors[0]), index = 1
+                )
+//                }
+            }
+            Row(
+                modifier = Modifier
+                    .height(100.dp)
+                    .horizontalScroll(scrollState4)
+            ) {
+                list.forEach {
+                    ListItem(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(color = colors[it % colors.size]), index = it
+                    )
+                }
+            }
+        }
+    }
+}

@@ -14,6 +14,7 @@ import com.example.composedemo.Menu.MultipleScrollSample
 import com.example.composedemo.Menu.NavSample
 import com.example.composedemo.Menu.Refresh
 import com.example.composedemo.Menu.RowPager
+import com.example.composedemo.Menu.RowScrollableSample
 import com.example.composedemo.Menu.TouchSample
 import com.example.composedemo.nav.NavDemo
 import com.example.composedemo.widget.RowPagerDemo
@@ -28,6 +29,7 @@ import com.example.composedemo.widget.pager.HorizontalPagerDemo
 import com.example.composedemo.widget.refresh.RefreshDemo
 import com.example.composedemo.widget.scroll.LazyColumnScrollDemo
 import com.example.composedemo.widget.scroll.MultipleScrollDemo
+import com.example.composedemo.widget.scroll.RowScrollableDemo
 import com.example.composedemo.widget.scroll.TouchDemo
 
 
@@ -46,11 +48,13 @@ sealed class Menu(val name: String, val router: String, val content: (@Composabl
     object MultipleScrollSample : Menu("MultipleScrollSample", "multipleScrollSample", { MultipleScrollDemo() })
     object TouchSample : Menu("TouchSample", "touchSample", { TouchDemo() })
     object LazyColumnScrollSample : Menu("LazyColumnScrollSample", "lazyColumnScrollSample", { LazyColumnScrollDemo() })
+    object RowScrollableSample : Menu("RowScrollableDemo", "RowScrollableDemo", { RowScrollableDemo() })
 }
 
 val menuList = listOf(
     NavSample, HorizontalPager, RowPager, CollapsingHeader,
     Refresh, ModifierSample, CanvasSample, ModifierDrawSample,
     ImageFilterSample, FocusSample, CommandSample,
-    MultipleScrollSample, TouchSample, LazyColumnScrollSample
+    MultipleScrollSample, TouchSample, LazyColumnScrollSample,
+    RowScrollableSample
 )

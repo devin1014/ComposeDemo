@@ -44,7 +44,7 @@ fun RowScrollableDemo() {
                     ListItem(
                         modifier = Modifier
                             .size(100.dp)
-                            .background(color = colors[it % colors.size]), index = it
+                            .background(color = colors[it % colors.size]), data = it.toString()
                     )
                 }
             }
@@ -57,7 +57,7 @@ fun RowScrollableDemo() {
                     ListItem(
                         modifier = Modifier
                             .size(100.dp)
-                            .background(color = colors[it % colors.size]), index = it
+                            .background(color = colors[it % colors.size]), data = it.toString()
                     )
                 }
             }
@@ -72,7 +72,7 @@ fun RowScrollableDemo() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp)
-                        .background(color = colors[0]), index = 1
+                        .background(color = colors[0]), data = "666"
                 )
 //                }
             }
@@ -85,7 +85,7 @@ fun RowScrollableDemo() {
                     ListItem(
                         modifier = Modifier
                             .size(100.dp)
-                            .background(color = colors[it % colors.size]), index = it
+                            .background(color = colors[it % colors.size]), data = it.toString()
                     )
                 }
             }

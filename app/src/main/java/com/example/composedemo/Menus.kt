@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import com.example.composedemo.Menu.CanvasSample
 import com.example.composedemo.Menu.CollapsingHeader
 import com.example.composedemo.Menu.CommandSample
+import com.example.composedemo.Menu.CustomGridViewSample
 import com.example.composedemo.Menu.FocusSample
 import com.example.composedemo.Menu.HorizontalPager
 import com.example.composedemo.Menu.ImageFilterSample
@@ -27,6 +28,7 @@ import com.example.composedemo.widget.modifier.ModifierDemo
 import com.example.composedemo.widget.modifier.ModifierDrawDemo
 import com.example.composedemo.widget.pager.HorizontalPagerDemo
 import com.example.composedemo.widget.refresh.RefreshDemo
+import com.example.composedemo.widget.scroll.CustomGridViewDemo
 import com.example.composedemo.widget.scroll.LazyColumnScrollDemo
 import com.example.composedemo.widget.scroll.MultipleScrollDemo
 import com.example.composedemo.widget.scroll.RowScrollableDemo
@@ -49,6 +51,7 @@ sealed class Menu(val name: String, val router: String, val content: (@Composabl
     object TouchSample : Menu("TouchSample", "touchSample", { TouchDemo() })
     object LazyColumnScrollSample : Menu("LazyColumnScrollSample", "lazyColumnScrollSample", { LazyColumnScrollDemo() })
     object RowScrollableSample : Menu("RowScrollableDemo", "RowScrollableDemo", { RowScrollableDemo() })
+    object CustomGridViewSample : Menu("CustomGridViewDemo", "CustomGridViewDemo", { CustomGridViewDemo() })
 }
 
 val menuList = listOf(
@@ -56,5 +59,5 @@ val menuList = listOf(
     Refresh, ModifierSample, CanvasSample, ModifierDrawSample,
     ImageFilterSample, FocusSample, CommandSample,
     MultipleScrollSample, TouchSample, LazyColumnScrollSample,
-    RowScrollableSample
+    RowScrollableSample, CustomGridViewSample
 )

@@ -55,7 +55,7 @@ fun LazyColumnScrollDemo() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(100.dp)
-                                .background(color = colors[it % colors.size]), index = it
+                                .background(color = colors[it % colors.size]), data = it.toString()
                         )
                     }
                 })
@@ -69,7 +69,7 @@ fun LazyColumnScrollDemo() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(100.dp)
-                                .background(color = colors[it % colors.size]), index = it
+                                .background(color = colors[it % colors.size]), data = it.toString()
                         )
                     }
                 })
@@ -84,13 +84,13 @@ fun LazyColumnScrollDemo() {
 }
 
 @Composable
-fun ListItem(modifier: Modifier, index: Int) {
+fun ListItem(modifier: Modifier, data: String) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = index.toString(),
+            text = data,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )

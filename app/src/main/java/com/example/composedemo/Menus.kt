@@ -10,6 +10,7 @@ import com.example.composedemo.Menu.HorizontalPager
 import com.example.composedemo.Menu.ImageFilterSample
 import com.example.composedemo.Menu.LazyColumnScrollSample
 import com.example.composedemo.Menu.LazyColumnStickHeaderSample
+import com.example.composedemo.Menu.LazyGridSample
 import com.example.composedemo.Menu.LazyRowStickHeaderSample
 import com.example.composedemo.Menu.ModifierDrawSample
 import com.example.composedemo.Menu.ModifierSample
@@ -33,6 +34,7 @@ import com.example.composedemo.widget.refresh.RefreshDemo
 import com.example.composedemo.widget.scroll.CustomGridViewDemo
 import com.example.composedemo.widget.scroll.LazyColumnScrollDemo
 import com.example.composedemo.widget.scroll.LazyColumnStickHeaderDemo
+import com.example.composedemo.widget.scroll.LazyGridDemo
 import com.example.composedemo.widget.scroll.LazyRowStickHeaderDemo
 import com.example.composedemo.widget.scroll.MultipleScrollDemo
 import com.example.composedemo.widget.scroll.RowScrollableDemo
@@ -58,6 +60,7 @@ sealed class Menu(val name: String, val router: String, val content: (@Composabl
     object CustomGridViewSample : Menu("CustomGridViewDemo", "CustomGridViewDemo", { CustomGridViewDemo() })
     object LazyColumnStickHeaderSample : Menu("LazyColumnStickHeaderDemo", "LazyColumnStickHeaderDemo", { LazyColumnStickHeaderDemo() })
     object LazyRowStickHeaderSample : Menu("LazyRowStickHeaderDemo", "LazyRowStickHeaderDemo", { LazyRowStickHeaderDemo() })
+    object LazyGridSample : Menu("LazyGridDemo", "LazyGridDemo", { LazyGridDemo() })
 }
 
 val menuList = listOf(
@@ -66,5 +69,5 @@ val menuList = listOf(
     ImageFilterSample, FocusSample, CommandSample,
     MultipleScrollSample, TouchSample, LazyColumnScrollSample,
     RowScrollableSample, CustomGridViewSample, LazyColumnStickHeaderSample,
-    LazyRowStickHeaderSample
+    LazyRowStickHeaderSample, LazyGridSample
 )

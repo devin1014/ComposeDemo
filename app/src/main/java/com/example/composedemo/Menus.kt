@@ -1,6 +1,7 @@
 package com.example.composedemo
 
 import androidx.compose.runtime.Composable
+import com.example.composedemo.Menu.BoxScoreSample
 import com.example.composedemo.Menu.CanvasSample
 import com.example.composedemo.Menu.CollapsingHeader
 import com.example.composedemo.Menu.CommandSample
@@ -32,11 +33,12 @@ import com.example.composedemo.widget.modifier.ModifierDemo
 import com.example.composedemo.widget.modifier.ModifierDrawDemo
 import com.example.composedemo.widget.pager.HorizontalPagerDemo
 import com.example.composedemo.widget.refresh.RefreshDemo
+import com.example.composedemo.widget.scroll.BoxScoreDemo
 import com.example.composedemo.widget.scroll.CustomGridViewDemo
 import com.example.composedemo.widget.scroll.LazyColumnScrollDemo
-import com.example.composedemo.widget.scroll.LazyColumnStickHeaderDemo
+import com.example.composedemo.widget.scroll.stick_header.LazyColumnStickHeaderDemo
 import com.example.composedemo.widget.scroll.LazyGridDemo
-import com.example.composedemo.widget.scroll.LazyRowStickHeaderDemo
+import com.example.composedemo.widget.scroll.stick_header.LazyRowStickHeaderDemo
 import com.example.composedemo.widget.scroll.MultipleScrollDemo
 import com.example.composedemo.widget.scroll.RowScrollableDemo
 import com.example.composedemo.widget.scroll.TouchDemo
@@ -64,6 +66,7 @@ sealed class Menu(val name: String, val router: String, val content: (@Composabl
     object LazyRowStickHeaderSample : Menu("LazyRowStickHeaderDemo", "LazyRowStickHeaderDemo", { LazyRowStickHeaderDemo() })
     object LazyGridSample : Menu("LazyGridDemo", "LazyGridDemo", { LazyGridDemo() })
     object GestureScrollSample : Menu("GestureScrollDemo", "GestureScrollDemo", { GestureScrollDemo() })
+    object BoxScoreSample : Menu("BoxScoreDemo", "BoxScoreDemo", { BoxScoreDemo() })
 }
 
 val menuList = listOf(
@@ -72,5 +75,6 @@ val menuList = listOf(
     ImageFilterSample, FocusSample, CommandSample,
     MultipleScrollSample, TouchSample, LazyColumnScrollSample,
     RowScrollableSample, CustomGridViewSample, LazyColumnStickHeaderSample,
-    LazyRowStickHeaderSample, LazyGridSample, GestureScrollSample
+    LazyRowStickHeaderSample, LazyGridSample, GestureScrollSample,
+    BoxScoreSample,
 )

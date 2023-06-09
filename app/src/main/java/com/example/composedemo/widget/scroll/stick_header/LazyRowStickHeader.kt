@@ -1,4 +1,4 @@
-package com.example.composedemo.widget.scroll
+package com.example.composedemo.widget.scroll.stick_header
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

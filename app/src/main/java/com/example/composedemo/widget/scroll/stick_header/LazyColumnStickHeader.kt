@@ -1,7 +1,6 @@
-package com.example.composedemo.widget.scroll
+package com.example.composedemo.widget.scroll.stick_header
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -21,46 +20,50 @@ import kotlin.math.max
 
 @Composable
 fun LazyColumnStickHeader(
-    scrollState: LazyListState = rememberLazyListState(),
+    modifier: Modifier = Modifier,
+    state: LazyListState = rememberLazyListState(),
     content: LazyListScope.() -> Unit,
     stickHeader: @Composable (index: Int) -> Unit,
     isStick: (index: Int) -> Boolean,
+    onScrollChanged: ((firstVisibleItemIndex: Int, firstVisibleItemScrollOffset: Int) -> Unit)? = null,
+    userScrollEnabled: Boolean = true,
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        val itemHeight = 99 // fake value
+    Box(modifier = modifier) {
         val scrollOffset = remember { mutableStateOf(0) }
         val stickHeaderOffset = remember { mutableStateOf(0) }
         val stickHerderPosition = remember { mutableStateOf(0) }
-
-        LaunchedEffect(key1 = scrollState, block = {
-            snapshotFlow { (scrollState.firstVisibleItemIndex * itemHeight) + scrollState.firstVisibleItemScrollOffset }.collect {
-                Logging.d("scroll: $it, firstItem: ${scrollState.firstVisibleItemIndex}, itemOffset: ${scrollState.firstVisibleItemScrollOffset}")
+        LaunchedEffect(key1 = state, block = {
+            snapshotFlow { state.firstVisibleItemScrollOffset }.collect {
+                Logging.d("firstItem: ${state.firstVisibleItemIndex}, itemOffset: ${state.firstVisibleItemScrollOffset}")
                 val scrollDown = it > scrollOffset.value
                 scrollOffset.value = it
                 if (scrollDown) {
-                    if (isStick(scrollState.firstVisibleItemIndex)) {
-                        stickHerderPosition.value = scrollState.firstVisibleItemIndex
+                    if (isStick(state.firstVisibleItemIndex)) {
+                        stickHerderPosition.value = state.firstVisibleItemIndex
                         stickHeaderOffset.value = 0
-                    } else if (isStick(scrollState.firstVisibleItemIndex + 1)) {
-                        stickHeaderOffset.value = -scrollState.firstVisibleItemScrollOffset
+                    } else if (isStick(state.firstVisibleItemIndex + 1)) {
+                        stickHeaderOffset.value = -state.firstVisibleItemScrollOffset
                     } else {
                         stickHeaderOffset.value = 0
                     }
                 } else {
-                    if (isStick(scrollState.firstVisibleItemIndex)) {
+                    if (isStick(state.firstVisibleItemIndex)) {
                         stickHeaderOffset.value = 0
-                    } else if (isStick(scrollState.firstVisibleItemIndex + 1)) {
-                        stickHeaderOffset.value = -scrollState.firstVisibleItemScrollOffset
-                        stickHerderPosition.value = findPreviousStick(scrollState.firstVisibleItemIndex, isStick = isStick)
+                    } else if (isStick(state.firstVisibleItemIndex + 1)) {
+                        stickHeaderOffset.value = -state.firstVisibleItemScrollOffset
+                        stickHerderPosition.value = findPreviousStick(state.firstVisibleItemIndex, isStick = isStick)
                     } else {
                         stickHeaderOffset.value = 0
                     }
                 }
+                onScrollChanged?.invoke(state.firstVisibleItemIndex, state.firstVisibleItemScrollOffset)
             }
         })
         LazyColumn(
-            state = scrollState,
-            content = { content(this) })
+            state = state,
+            content = { content(this) },
+            userScrollEnabled = userScrollEnabled
+        )
         Box(
             modifier = Modifier.offset(
                 x = 0.dp,

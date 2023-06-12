@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.composedemo.Logging
 import kotlin.math.max
 
 @Composable
@@ -34,7 +33,6 @@ fun LazyColumnStickHeader(
         val stickHerderPosition = remember { mutableStateOf(0) }
         LaunchedEffect(key1 = state, block = {
             snapshotFlow { state.firstVisibleItemScrollOffset }.collect {
-                Logging.d("firstItem: ${state.firstVisibleItemIndex}, itemOffset: ${state.firstVisibleItemScrollOffset}")
                 val scrollDown = it > scrollOffset.value
                 scrollOffset.value = it
                 if (scrollDown) {

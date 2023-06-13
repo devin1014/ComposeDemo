@@ -1,16 +1,24 @@
 package com.example.composedemo.widget.scroll
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun CustomGridViewDemo() {
     val factory = CustomGridViewFactoryImpl
     CustomGridView(
         factory = factory,
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 80.dp),
         item = { modifier, row, column, data ->
             var itemData = data.toString()
             val m2: Modifier = if (column != 0 && !factory.isRowScrollable(row)) {
@@ -34,7 +42,14 @@ fun CustomGridViewDemo() {
 @Preview
 @Composable
 fun CustomGridViewDemoPreview() {
-    CustomGridViewDemo()
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .background(color = Color.Red)
+    ) {
+        CustomGridViewDemo()
+    }
 }
 
 object CustomGridViewFactoryImpl : CustomGridViewFactory {

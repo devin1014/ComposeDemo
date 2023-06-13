@@ -2,8 +2,9 @@ package com.example.composedemo.widget.scroll
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -24,11 +25,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CustomGridView(
+    modifier: Modifier = Modifier,
     factory: CustomGridViewFactory,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     item: @Composable (modifier: Modifier, row: Int, column: Int, data: Any) -> Unit,
     onItemClick: ((row: Int, column: Int) -> Unit)? = null
 ) {
-    Row(modifier = Modifier.fillMaxSize()) {
+    Row(modifier = modifier) {
         val offset = remember { mutableStateOf(0) }
         val rowScrollState = rememberScrollState(offset.value)
         LaunchedEffect(key1 = rowScrollState, block = {
@@ -42,6 +45,8 @@ fun CustomGridView(
         //left
         LazyColumnStickHeader(
             state = leftListState,
+            modifier = Modifier.fillMaxHeight(),
+            contentPadding = contentPadding,
             content = {
                 items(factory.getRowSize()) { row ->
                     val column = 0
@@ -68,6 +73,8 @@ fun CustomGridView(
         //right
         val rightContentFirstColumn = 1
         LazyColumnStickHeader(
+            modifier = Modifier.fillMaxHeight(),
+            contentPadding = contentPadding,
             content = {
                 items(factory.getRowSize()) { row ->
                     if (factory.isRowScrollable(row)) {
@@ -86,11 +93,6 @@ fun CustomGridView(
                             }
                         }
                     } else {
-//                        Box(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .height(factory.getRowHeight().dp)
-//                        ) {
                         item(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -99,7 +101,6 @@ fun CustomGridView(
                             column = rightContentFirstColumn,
                             data = factory.getItem(row, rightContentFirstColumn),
                         )
-//                        }
                     }
                 }
             },

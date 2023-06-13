@@ -1,6 +1,7 @@
 package com.example.composedemo.widget.scroll.stick_header
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -21,6 +22,7 @@ import kotlin.math.max
 fun LazyColumnStickHeader(
     modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState(),
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     content: LazyListScope.() -> Unit,
     stickHeader: @Composable (index: Int) -> Unit,
     isStick: (index: Int) -> Boolean,
@@ -59,6 +61,7 @@ fun LazyColumnStickHeader(
         })
         LazyColumn(
             state = state,
+            contentPadding = contentPadding,
             content = { content(this) },
             userScrollEnabled = userScrollEnabled
         )

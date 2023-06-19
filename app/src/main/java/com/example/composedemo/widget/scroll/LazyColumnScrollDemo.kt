@@ -90,8 +90,8 @@ fun ListItem(modifier: Modifier, data: String) {
     ) {
         Text(
             text = data,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
         )
     }
 }

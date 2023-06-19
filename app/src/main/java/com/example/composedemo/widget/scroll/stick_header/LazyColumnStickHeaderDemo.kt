@@ -11,41 +11,44 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.composedemo.resources.getItemColor
 
 @Composable
 fun LazyColumnStickHeaderDemo() {
     LazyColumnStickHeader(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.Red),
-        contentPadding = PaddingValues(bottom = 80.dp),
+            .background(color = Color.White),
+        contentPadding = PaddingValues(bottom = 50.dp),
         content = {
             items(30) {
-                Item(index = it)
+                Item(index = it, color = if (it % 10 == 0) Color.Cyan else Color.Transparent)
             }
         },
         stickHeader = {
-            Item(index = it)
+            Item(index = it, color = Color.Cyan)
         },
         isStick = {
-            it % 5 == 0
+            it % 10 == 0
         },
     )
 }
 
 @Composable
-private fun Item(index: Int) {
+private fun Item(index: Int, color: Color = Color.Transparent) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .background(color = getItemColor(index)),
+            .height(50.dp)
+            .background(color = color),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = index.toString())
+        Text(
+            text = index.toString(),
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 

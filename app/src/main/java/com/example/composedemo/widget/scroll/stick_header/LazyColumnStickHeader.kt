@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.math.abs
 import kotlin.math.max
 
 @Composable
@@ -33,6 +34,7 @@ fun LazyColumnStickHeader(
         val scrollOffset = remember { mutableStateOf(0) }
         val stickHeaderOffset = remember { mutableStateOf(0) }
         val stickHerderPosition = remember { mutableStateOf(0) }
+        val lastFirstVisibleItem = remember { mutableStateOf(0) }
         LaunchedEffect(key1 = state, block = {
             snapshotFlow { state.firstVisibleItemScrollOffset }.collect {
                 val scrollDown = it > scrollOffset.value
@@ -43,8 +45,14 @@ fun LazyColumnStickHeader(
                         stickHeaderOffset.value = 0
                     } else if (isStick(state.firstVisibleItemIndex + 1)) {
                         stickHeaderOffset.value = -state.firstVisibleItemScrollOffset
+                        if (state.layoutInfo.visibleItemsInfo.size > 1 && state.layoutInfo.visibleItemsInfo[1].offset < 10) {
+                            stickHerderPosition.value = state.firstVisibleItemIndex + 1
+                        }
                     } else {
                         stickHeaderOffset.value = 0
+                        if (abs(state.firstVisibleItemIndex - lastFirstVisibleItem.value) > 1) {
+                            stickHerderPosition.value = findPreviousStick(state.firstVisibleItemIndex, isStick = isStick)
+                        }
                     }
                 } else {
                     if (isStick(state.firstVisibleItemIndex)) {
@@ -54,9 +62,13 @@ fun LazyColumnStickHeader(
                         stickHerderPosition.value = findPreviousStick(state.firstVisibleItemIndex, isStick = isStick)
                     } else {
                         stickHeaderOffset.value = 0
+                        if (abs(state.firstVisibleItemIndex - lastFirstVisibleItem.value) > 1) {
+                            stickHerderPosition.value = findPreviousStick(state.firstVisibleItemIndex, isStick = isStick)
+                        }
                     }
                 }
                 onScrollChanged?.invoke(state.firstVisibleItemIndex, state.firstVisibleItemScrollOffset)
+                lastFirstVisibleItem.value = state.firstVisibleItemIndex
             }
         })
         LazyColumn(

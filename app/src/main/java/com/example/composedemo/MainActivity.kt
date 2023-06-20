@@ -1,11 +1,11 @@
 package com.example.composedemo
 
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells.Adaptive
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -105,15 +107,17 @@ class MainActivity : AppCompatActivity() {
         modifier: Modifier,
         navController: NavHostController,
     ) {
+        val context = LocalContext.current
         AnimatedNavHost(
             navController = navController,
             startDestination = "main",
             route = "list",
-            modifier = modifier,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }) {
+            modifier = modifier
+        ) {
+            val activeMenu = menuList.indexOfFirst { it is DefaultPage }
             composable(route = "main") {
                 LazyVerticalGrid(
+                    state = rememberLazyGridState(activeMenu, 0),
                     columns = Adaptive(minSize = 128.dp),
                     content = {
                         itemsIndexed(menuList) { index, menu ->
@@ -121,7 +125,9 @@ class MainActivity : AppCompatActivity() {
                                 modifier = Modifier
                                     .height(128.dp)
                                     .background(color = bgColors[index % bgColors.size])
-                                    .clickable { navController.navigate(menu.router) }
+                                    .clickable {
+                                        onMenuClick(context, menu)
+                                    }
                                     .padding(12.dp),
                                 contentAlignment = Alignment.Center
                             ) {
@@ -138,9 +144,16 @@ class MainActivity : AppCompatActivity() {
             menuList.forEach { menu ->
                 composable(menu.router) { menu.content() }
             }
+            if (activeMenu >= 0) {
+                onMenuClick(context = context, menuList[activeMenu])
+            }
         }
     }
 
+    private fun onMenuClick(context: Context, menu: Menu) {
+        if (menu !is ActivityPage) navController.navigate(menu.router)
+        else startActivity(Intent(context, menu.targetPage.java))
+    }
 }
 
 class MyRowCombineViewModel(

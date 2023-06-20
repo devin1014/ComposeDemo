@@ -60,6 +60,7 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
     debugImplementation 'androidx.compose.ui:ui-tooling'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     
     implementation 'com.google.accompanist:accompanist-swiperefresh:0.28.0'
     implementation 'com.google.accompanist:accompanist-pager:0.28.0'

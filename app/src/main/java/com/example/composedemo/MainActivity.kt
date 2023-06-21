@@ -43,6 +43,7 @@ import com.example.composedemo.widget.RowCombineViewModel
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import java.lang.Integer.max
 
 private val bgColors = listOf(Color.Cyan, Color.Magenta, Color.LightGray, Color.Yellow, Color.Blue, Color.Green)
 
@@ -117,7 +118,7 @@ class MainActivity : AppCompatActivity() {
             val activeMenu = menuList.indexOfFirst { it is DefaultPage }
             composable(route = "main") {
                 LazyVerticalGrid(
-                    state = rememberLazyGridState(activeMenu, 0),
+                    state = rememberLazyGridState(max(activeMenu, 0), 0),
                     columns = Adaptive(minSize = 128.dp),
                     content = {
                         itemsIndexed(menuList) { index, menu ->
@@ -144,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             menuList.forEach { menu ->
                 composable(menu.router) { menu.content() }
             }
-            if (activeMenu >= 0) {
+            if (activeMenu >= 0 && menuList[activeMenu] is AutoLink) {
                 onMenuClick(context = context, menuList[activeMenu])
             }
         }

@@ -16,6 +16,7 @@ import com.example.composedemo.Menu.LazyRowStickHeaderSample
 import com.example.composedemo.Menu.ModifierDrawSample
 import com.example.composedemo.Menu.ModifierSample
 import com.example.composedemo.Menu.MotionLayout
+import com.example.composedemo.Menu.MotionSample
 import com.example.composedemo.Menu.MultipleScrollSample
 import com.example.composedemo.Menu.NavSample
 import com.example.composedemo.Menu.Refresh
@@ -23,6 +24,7 @@ import com.example.composedemo.Menu.RowPager
 import com.example.composedemo.Menu.RowScrollableSample
 import com.example.composedemo.Menu.TouchSample
 import com.example.composedemo.motion.MotionActivity
+import com.example.composedemo.motion.MotionDemo
 import com.example.composedemo.nav.NavDemo
 import com.example.composedemo.widget.RowPagerDemo
 import com.example.composedemo.widget.collapsing_layout.CollapsingHeaderDemo
@@ -66,7 +68,10 @@ sealed class Menu(val name: String, val router: String, val content: (@Composabl
     object LazyRowStickHeaderSample : Menu("LazyRowStickHeaderDemo", "LazyRowStickHeaderDemo", { LazyRowStickHeaderDemo() })
     object LazyGridSample : Menu("LazyGridDemo", "LazyGridDemo", { LazyGridDemo() })
     object GestureScrollSample : Menu("GestureScrollDemo", "GestureScrollDemo", { GestureScrollDemo() })
-    object MotionLayout : Menu("MotionLayout", "MotionLayout", { throw IllegalArgumentException("should not call this function!") }), ActivityPage, DefaultPage {
+    object MotionSample : Menu("MotionDemo", "MotionDemo", { MotionDemo() }), DefaultPage
+
+    // Activity
+    object MotionLayout : Menu("MotionLayout", "MotionLayout", { throw IllegalArgumentException("should not call this function!") }), ActivityPage {
         override val targetPage: KClass<*> = MotionActivity::class
     }
 }
@@ -77,6 +82,8 @@ interface ActivityPage {
 
 interface DefaultPage
 
+interface AutoLink
+
 val menuList = listOf(
     NavSample, HorizontalPager, RowPager, CollapsingHeader,
     Refresh, ModifierSample, CanvasSample, ModifierDrawSample,
@@ -84,5 +91,5 @@ val menuList = listOf(
     MultipleScrollSample, TouchSample, LazyColumnScrollSample,
     RowScrollableSample, CustomGridViewSample, LazyColumnStickHeaderSample,
     LazyRowStickHeaderSample, LazyGridSample, GestureScrollSample,
-    MotionLayout,
+    MotionLayout, MotionSample,
 )
